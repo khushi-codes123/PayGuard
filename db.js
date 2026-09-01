@@ -1,8 +1,15 @@
+const fs = require('fs');
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 
-const dbPath = path.join(__dirname, 'database', 'payguard.db');
-const db = new sqlite3.Database(dbPath);
+const dbFile = process.env.SQLITE_DB_PATH || path.join(__dirname, 'database', 'payguard.db');
+const dbDir = path.dirname(dbFile);
+
+if (!fs.existsSync(dbDir)) {
+  fs.mkdirSync(dbDir, { recursive: true });
+}
+
+const db = new sqlite3.Database(dbFile);
 
 const sampleTransactions = [
   {
